@@ -1,2 +1,15 @@
-# editor-framework-app
-A very simple editor framework test app
+## Usage
+
+```bash
+# Install npm packages
+npm install .
+
+# Install bower packages
+bower install .
+
+# Install electron
+gulp update-electron
+
+# run the framework
+sh electron.sh
+```
