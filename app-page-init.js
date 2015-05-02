@@ -1,4 +1,13 @@
 (function () {
+
+    Pace.once( 'hide', function () {
+        EditorUI.removeLoadingMask();
+    });
+
+    EditorUI.addLoadingMask({
+        background: '#333',
+    });
+
     var mainDock = document.getElementById('mainDock');
     Editor.loadLayout( mainDock, function () {
     });
