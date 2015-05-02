@@ -11,5 +11,5 @@ bower install .
 gulp update-electron
 
 # run the framework
-sh electron.sh
+sh app.sh
 ```

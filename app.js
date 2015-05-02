@@ -5,6 +5,10 @@ var Path = require('fire-path');
 global.__app = {
     path: __dirname,
 
+    initCommander: function ( commander ) {
+        // TODO:
+    },
+
     init: function ( options ) {
         // initialize ./editor-framework-app/.settings
         var settingsPath = Path.join(Editor.cwd, '.settings');
@@ -63,6 +67,18 @@ global.__app = {
             mainWin.openDevTools();
         }
         mainWin.focus();
+    },
+
+    load: function () {
+        // TODO
+    },
+
+    unload: function () {
+        // TODO
+    },
+
+    'app:foobar': function () {
+        Editor.log('foobar');
     },
 };
 
