@@ -1,14 +1,21 @@
 <dom-module id="foo-bar">
   <style>
+    :host {
+        margin: 10px
+    }
+
     .label {
         color: #ff0;
     }
   </style>
 
   <template>
-    <img src="001.png"></img>
-    <input value="{{foobar::input}}"></input>
+    <div>
+      <img src="001.png"></img>
+    </div>
     <div class="label">{{foobar}}</div>
+    <input value="{{foobar::input}}"></input>
+    <button on-click="_onClick">Say Hello</button>
   </template>
 </dom-module>
 
@@ -22,6 +29,12 @@
               type: String,
               value: 'Hello Foobar',
           }
+      },
+
+      _onClick: function ( event ) {
+          Editor.sendRequestToCore('foobar:show-text', this.foobar, function ( result ) {
+              Editor.failed( 'result = ' + result );
+          });
       },
 
       'foobar:hello': function ( reply ) {

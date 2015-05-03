@@ -5,10 +5,10 @@
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
-    "Foobar/Open Foobar": {
+    "Packages/Foobar/Open": {
       "message": "foobar:open"
     },
-    "Foobar/Test 01": {
+    "Packages/Foobar/Test 01": {
       "message": "foobar:test",
       "params": ["hello", "world"],
       "panel": "foobar.panel"

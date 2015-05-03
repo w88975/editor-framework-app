@@ -2,10 +2,6 @@ function _snapPixel (p) {
     return Math.floor(p);
 }
 
-function _smooth (t) {
-    return ( t === 1.0 ) ? 1.0 : 1.001 * ( 1.0 - Math.pow( 2, -10 * t ) );
-}
-
 // pixi config
 PIXI.utils._saidHello = true;
 
@@ -18,13 +14,25 @@ grids.pixi = Polymer( {
             type: Number,
             value: 1.0,
             observer: '_scaleChanged',
-        }
+        },
+
+        debugInfo: {
+            type: Object,
+            value: {
+                tickUnit: 100,
+                ratio: 1.0,
+            },
+        },
+    },
+
+    _computedScale: function ( scale ) {
+        return scale.toFixed(3);
     },
 
     listeners: {
         'mousewheel': '_onMouseWheel',
         'resize': '_onResize',
-        'panel-active': '_onPanelActive',
+        'panel-show': '_onPanelShow',
     },
 
     created: function () {
@@ -71,7 +79,7 @@ grids.pixi = Polymer( {
         this.resize(rect.width, rect.height);
     },
 
-    _onPanelActive: function ( event ) {
+    _onPanelShow: function ( event ) {
         var rect = this.$.view.getBoundingClientRect();
         this.resize(rect.width, rect.height);
     },
@@ -102,14 +110,15 @@ grids.pixi = Polymer( {
     updateGrids: function () {
         var i = 0;
 
-        var tickUnit = 100;
         var tickCount = 10;
-        var tickDistance = 50;
+        var tickDistance = 10;
 
         var nextTickCount = 1;
-        var curTickUnit = tickUnit;
         var ratio = 1.0;
+
         var trans;
+        var tickUnit = tickCount * tickDistance;
+        var curTickUnit = tickUnit;
 
         if ( this.scale >= 1.0 ) {
             while ( tickDistance*nextTickCount < tickUnit*this.scale ) {
@@ -124,7 +133,7 @@ grids.pixi = Polymer( {
             }
             curTickUnit = tickUnit*nextTickCount;
             ratio = (tickUnit*this.scale) / (tickDistance/nextTickCount);
-            ratio /= 10.0;
+            ratio /= tickCount;
         }
         ratio = (ratio - 1.0/tickCount) / (1.0 - 1.0/tickCount);
 
@@ -146,7 +155,7 @@ grids.pixi = Polymer( {
                 this.graphics.lineStyle(1, 0x555555, 1.0);
             }
             else {
-                this.graphics.lineStyle(1, 0x555555, _smooth(ratio));
+                this.graphics.lineStyle(1, 0x555555, Editor.Easing.linear(ratio));
             }
             ++tickIndex;
 
@@ -162,7 +171,7 @@ grids.pixi = Polymer( {
                 this.graphics.lineStyle(1, 0x555555, 1.0);
             }
             else {
-                this.graphics.lineStyle(1, 0x555555, _smooth(ratio));
+                this.graphics.lineStyle(1, 0x555555, Editor.Easing.linear(ratio));
             }
             ++tickIndex;
 
@@ -171,5 +180,9 @@ grids.pixi = Polymer( {
             this.graphics.lineTo( this.canvasWidth, _snapPixel(trans.y) );
         }
         this.graphics.endFill();
+
+        // DEBUG
+        this.setPathValue('debugInfo.tickUnit', curTickUnit);
+        this.setPathValue('debugInfo.ratio', ratio.toFixed(2));
     },
 });

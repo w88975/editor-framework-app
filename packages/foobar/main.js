@@ -22,4 +22,9 @@ module.exports = {
             Editor.log('Can not find window by panel %s', panelID);
         }
     },
+
+    'foobar:show-text': function ( reply, text ) {
+        Editor.success( 'foobar say ' + text );
+        reply( 'failed ' + text);
+    },
 };
