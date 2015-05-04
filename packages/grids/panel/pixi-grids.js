@@ -5,8 +5,7 @@ function _snapPixel (p) {
 // pixi config
 PIXI.utils._saidHello = true;
 
-window.grids = {};
-grids.pixi = Polymer( {
+Editor.registerPanel( 'grids.pixi', {
     is: 'pixi-grids',
 
     properties: {
