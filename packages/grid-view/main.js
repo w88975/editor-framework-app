@@ -5,7 +5,7 @@ module.exports = {
     unload: function () {
     },
 
-    'grids:open': function () {
-        Editor.Panel.open( 'grids.pixi' );
+    'grid-view:open': function () {
+        Editor.Panel.open( 'grid-view.panel' );
     },
 };

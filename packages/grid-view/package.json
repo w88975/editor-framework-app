@@ -1,18 +1,18 @@
 {
-  "name": "grids",
+  "name": "grid-view",
   "version": "0.0.1",
   "description": "Grids",
   "author": "Firebox Technology",
   "main": "main.js",
   "menus": {
     "Packages/Girds/Open": {
-      "message": "grids:open"
+      "message": "grid-view:open"
     }
   },
   "panels": {
-    "pixi": {
+    "panel": {
       "type": "dockable",
-      "view": "panel/pixi-grids.html",
+      "view": "panel/panel.html",
       "title": "Grids",
       "width": 800,
       "height": 600,

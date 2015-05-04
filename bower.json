@@ -14,6 +14,7 @@
     "pace": "",
     "mousetrap": "ccampbell/mousetrap#1.5.2",
     "pixi": "3.0.2",
+    "d3": "3.5.5",
     "web-animations-js": "web-animations/web-animations-js#master",
     "layout": "Polymer/layout",
     "polymer": "Polymer/polymer#0.8.0-rc.7"

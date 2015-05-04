@@ -10,21 +10,5 @@ module.exports = {
     },
 
     'foobar:test': function () {
-        var panelID = 'foobar.panel';
-        var editorWin = Editor.Panel.findWindow(panelID);
-        if ( editorWin ) {
-            var id = editorWin.sendRequestToPage('foobar:hello', function ( text ) {
-                Editor.log('reply %s', text);
-            });
-            editorWin.cancelRequestToPage(id);
-        }
-        else {
-            Editor.log('Can not find window by panel %s', panelID);
-        }
-    },
-
-    'foobar:show-text': function ( reply, text ) {
-        Editor.success( 'foobar say ' + text );
-        reply( 'failed ' + text);
     },
 };

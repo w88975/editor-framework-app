@@ -24,7 +24,6 @@
       "min-width": 400,
       "min-height": 200,
       "messages": [
-        "foobar:hello"
       ]
     }
   }

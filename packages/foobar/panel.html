@@ -1,24 +1,43 @@
+<style>
+    svg rect {
+        fill: transparent;
+    }
+    svg .axis path, .axis line {
+        fill: none;
+        stroke: #555;
+        stroke-width: 1;
+    }
+    svg text {
+        fill: white;
+    }
+</style>
+
 <dom-module id="foo-bar">
   <style>
     :host {
-        margin: 10px
+        margin: 10px;
     }
 
     .label {
         color: #ff0;
     }
+
+    svg {
+        box-sizing: border-box;
+        font: 12px sans-serif;
+        shape-rendering: crispEdges;
+        margin: 20px;
+    }
   </style>
 
   <template>
-    <div>
-      <img src="001.png"></img>
-    </div>
-    <div class="label">{{foobar}}</div>
-    <input value="{{foobar::input}}"></input>
-    <button on-click="_onClick">Say Hello</button>
+    <!-- <div class="label">{{foobar}}</div>       -->
+    <!-- <input value="{{foobar::input}}"></input> -->
+    <svg id="svg"></svg>
   </template>
 </dom-module>
 
+<script type="text/javascript" src="app://bower_components/d3/d3.js"></script>
 <script>
   Editor.registerPanel( 'foobar.panel', {
       is: 'foo-bar',
@@ -30,16 +49,71 @@
           }
       },
 
-      _onClick: function ( event ) {
-          Editor.sendRequestToCore('foobar:show-text', this.foobar, function ( result ) {
-              Editor.failed( 'result = ' + result );
-          });
-      },
+      ready: function () {
+          var rect = this.$.svg.getBoundingClientRect();
+          var width = 500;
+          var height = 500;
 
-      'foobar:hello': function ( reply ) {
-          setTimeout( function () {
-              reply('world');
-          }, 1000 );
+          var margin = {top: 20, right: 20, bottom: 20, left: 20},
+              width = width - margin.left - margin.right,
+              height = height - margin.top - margin.bottom;
+
+          var x = d3.scale.linear()
+              .domain([-width / 2, width / 2])
+              .range([0, width], .1)
+              ;
+
+          var y = d3.scale.linear()
+              .domain([-height / 2, height / 2])
+              .range([height, 0], .1)
+              ;
+
+          var xAxis = d3.svg.axis()
+              .scale(x)
+              .orient("bottom")
+              .ticks(10)
+              .tickSize(-height);
+
+          var yAxis = d3.svg.axis()
+              .scale(y)
+              .orient("left")
+              .ticks(10)
+              .tickSize(-width);
+
+
+          function zoomed() {
+              svg.select(".x.axis").call(xAxis);
+              svg.select(".y.axis").call(yAxis);
+          }
+
+          var zoom = d3.behavior.zoom()
+              .x(x)
+              .y(y)
+              .scaleExtent([0.1, 100])
+              .on("zoom", zoomed);
+              ;
+
+          var svg = d3.select(this.$.svg)
+              .attr("width", width + margin.left + margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+              .append("g")
+              .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+              .call(zoom);
+
+              svg.append("rect")
+              .attr("width", width)
+              .attr("height", height)
+              ;
+
+              svg.append("g")
+              .attr("class", "x axis")
+              .attr("transform", "translate(0," + height + ")")
+              .call(xAxis);
+
+              svg.append("g")
+              .attr("class", "y axis")
+              .call(yAxis);
+
       },
   });
 </script>
