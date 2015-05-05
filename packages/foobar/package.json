@@ -16,8 +16,8 @@
   },
   "panels": {
     "panel": {
-      "type": "dockable",
       "view": "panel.html",
+      "type": "dockable",
       "title": "Foobar",
       "width": 500,
       "height": 800,

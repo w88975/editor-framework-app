@@ -13,6 +13,8 @@
     "fontawesome": "",
     "pace": "",
     "mousetrap": "ccampbell/mousetrap#1.5.2",
+    "numeral": "1.5.3",
+    "tween.js": "tweenjs/tween.js#r14",
     "pixi": "3.0.2",
     "d3": "3.5.5",
     "web-animations-js": "web-animations/web-animations-js#master",
