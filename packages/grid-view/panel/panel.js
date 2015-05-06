@@ -15,14 +15,18 @@ Editor.registerPanel( 'grid-view.panel', {
 
         this.$.pixiGrid.setScaleV( [5,2], 0.01, 1000 );
         this.$.pixiGrid.setMappingV( 100, -100, 200 );
+
+        this.$.pixiGrid.setAnchor( 0.0, 0.0 );
     },
 
     _onResize: function ( event ) {
-        this.$.pixiGrid.autoResize();
+        this.$.pixiGrid.resize();
+        this.$.pixiGrid.repaint();
     },
 
     _onPanelShow: function ( event ) {
-        this.$.pixiGrid.autoResize();
+        this.$.pixiGrid.resize();
+        this.$.pixiGrid.repaint();
     },
 
     _onMouseDown: function ( event ) {
@@ -49,6 +53,7 @@ Editor.registerPanel( 'grid-view.panel', {
                 document.removeEventListener('mouseup', mouseupHandle);
 
                 EditorUI.removeDragGhost();
+                this.style.cursor = '';
             }.bind(this);
 
             //
@@ -56,7 +61,8 @@ Editor.registerPanel( 'grid-view.panel', {
             this._lastClientY = event.clientY;
 
             //
-            EditorUI.addDragGhost("move");
+            EditorUI.addDragGhost('-webkit-grabbing');
+            this.style.cursor = '-webkit-grabbing';
             document.addEventListener ( 'mousemove', mousemoveHandle );
             document.addEventListener ( 'mouseup', mouseupHandle );
 

@@ -42,11 +42,16 @@
         position: absolute;
         transform: translateY(-50%);
     }
+    #pixiGrid {
+        cursor: -webkit-grab;
+    }
   </style>
 
   <template>
     <div class="border fit">
       <pixi-grid id="pixiGrid" class="fit"
+          show-label
+          show-debug-info
       ></pixi-grid>
     </div>
   </template>
