@@ -8,8 +8,8 @@ Editor.registerPanel( 'grid-view.panel', {
     },
 
     ready: function () {
-        // this.$.pixiGrid.setScaleH( [5,2,3,2], 1, 1000, 'frame' );
-        this.$.pixiGrid.setScaleH( [5,2], 0.01, 1000 );
+        this.$.pixiGrid.setScaleH( [5,2,3,2], 1, 1000, 'frame' );
+        // this.$.pixiGrid.setScaleH( [5,2], 0.01, 1000 );
         this.$.pixiGrid.setMappingH( -100, 100, 200 );
 
         this.$.pixiGrid.setScaleV( [5,2], 0.01, 1000 );

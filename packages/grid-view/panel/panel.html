@@ -49,12 +49,15 @@
 
   <template>
     <div class="border fit">
-      <pixi-grid id="pixiGrid" class="fit"
-          show-label
-          show-debug-info
-          on-mousedown="_onMouseDown"
-          on-mousewheel="_onMouseWheel"
-      ></pixi-grid>
+        <div class="layout horizontal fit">
+            <div style="min-width: 240px"></div>
+            <pixi-grid id="pixiGrid" class="flex-1"
+                show-label
+                show-debug-info
+                on-mousedown="_onMouseDown"
+                on-mousewheel="_onMouseWheel"
+            ></pixi-grid>
+      </div>
     </div>
   </template>
 </dom-module>
