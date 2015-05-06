@@ -5,7 +5,6 @@ Editor.registerPanel( 'grid-view.panel', {
     listeners: {
         'resize': '_onResize',
         'panel-show': '_onPanelShow',
-        'mousedown': '_onMouseDown',
     },
 
     ready: function () {
@@ -27,6 +26,10 @@ Editor.registerPanel( 'grid-view.panel', {
     _onPanelShow: function ( event ) {
         this.$.pixiGrid.resize();
         this.$.pixiGrid.repaint();
+    },
+
+    _onMouseWheel: function ( event ) {
+        this.$.pixiGrid.scaleAction(event);
     },
 
     _onMouseDown: function ( event ) {
