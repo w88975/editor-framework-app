@@ -1,0 +1,146 @@
+:host {
+    overflow: hidden;
+    box-shadow: inset 0 0 8px 2px rgba(0,0,0,0.2);
+    background: #333;
+    position: relative;
+}
+
+.content {
+}
+
+.topbar {
+    width: 100%;
+    height: 42px;
+    background: -webkit-linear-gradient(bottom, #2e2e2e, #3b3b3b);
+    float: left;
+    border-bottom: 1px solid #0e0e0e;
+}
+
+.action_tree {
+    min-width: 240px;
+    background: #555;
+}
+
+.timeline-bar {
+    height: 20px;
+    position: relative;
+}
+
+.drop-sheet {
+    display: flex;
+    flex: 4;
+    overflow: hidden;
+    overflow-x: hidden;
+    background: rgb(65,65,65);
+    box-shadow: inset 0 0 8px 2px rgba(0,0,0,0.2);
+    height: 100%;
+    position: relative;
+}
+
+.resize {
+    width: 5px;
+    height: 100%;
+}
+
+#svg {
+    position: absolute;
+    right: 0px;
+    top: 44px;
+}
+
+#tick {
+    position: absolute;
+    right: 0px;
+    height: 42px;
+}
+
+.lines {
+    width: 100%;
+    height: 15px;
+    border-top: 1px solid rgb(42, 42, 42);
+    border-bottom: 1px solid rgb(37, 37, 37);
+    margin-top: 12px;
+    background: -webkit-linear-gradient(bottom, #2f2f2f, #363636);
+}
+
+#mask {
+    height: 100%;
+    position: absolute;
+    background: white;
+    pointer-events: none;
+    opacity: 0.1;
+    bottom: 0px;
+}
+
+#drag {
+    height: 100%;
+    width: 1.2px;
+    background: red;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    cursor: col-resize;
+}
+
+#drag .cube {
+    width: 8px;
+    height: 12px;
+    background: #E29D09;
+    /*border: 1px solid black;*/
+    border-radius: 2px;
+    margin-left: -4px;
+}
+
+.tip {
+    position: absolute;
+    width: 40px;
+    height: 12px;
+    background: gray;
+    text-align: center;
+    font-size: 10px;
+    color: white;
+    top: 0px;
+    display: none;
+    z-index: 999;
+}
+
+.mouse_select {
+    position: absolute;
+    background: #0099ff;
+    opacity: 0.4;
+    border: 1px solid rgb(98,177,254);
+    left: 0px;
+    top: 0px;
+}
+
+#layout {
+    position: relative;
+}
+
+.line {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+    opacity: 0.1;
+}
+
+.line ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.item{
+    width: 100%;
+    height: 30px;
+    background: black;
+}
+
+.item:nth-child(even) {
+    background: gray;
+}
+
+.black {
+    background: black;
+}

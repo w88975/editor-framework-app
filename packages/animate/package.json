@@ -1,0 +1,25 @@
+{
+  "name": "animate-timeline",
+  "version": "0.0.1",
+  "description": "animate timeline with fireball",
+  "author": "Firebox Technology",
+  "main": "main.js",
+  "menus": {
+    "Packages/animate/Open": {
+      "message": "animate-timeline:open"
+    }
+  },
+  "panels": {
+    "panel": {
+      "type": "dockable",
+      "view": "panel/animate-timeline.html",
+      "title": "animate-timeline",
+      "width": 800,
+      "height": 100,
+      "min-width": 400,
+      "min-height": 100,
+      "messages": [
+      ]
+    }
+  }
+}

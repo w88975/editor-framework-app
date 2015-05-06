@@ -1,0 +1,48 @@
+<link rel="import" href="editor-framework://builtin/widgets/pixi-grid/pixi-grid.html">
+
+<dom-module id="animate-timeline">
+<link rel="import" type="css" href="animate-timeline.css">
+
+<template>
+    <div class="content layout horizontal" id="content">
+        <div class="action_tree">
+        </div>
+        <div class="layout vertical flex-1" id="layout">
+            <div class="timeline-bar">
+                <pixi-grid id="pixiGrid" class="fit black"
+                show-label-h
+                on-mousedown="_onMouseDown"
+                on-mousewheel="_onMouseWheel"
+                ></pixi-grid>
+            </div>
+            <div class="drop-sheet flex-1" id="timeline">
+                <pixi-grid id="dropSheep" class="fit"
+                show-label-v
+                >
+                </pixi-grid>
+
+                <div class="line" id="lines"
+                on-mousewheel="_onMouseWheel"
+                >
+                    <ul id="ul"></ul>
+                </div>
+            </div>
+
+
+            <div id="mask"></div>
+            <div id="drag" on-mousedown="_drag">
+                <div class="cube">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <tempcomponent style="display: none">
+        <span class="tip" id="tip">{{frames}}</span>
+    </tempcomponent>
+
+</template>
+</dom-module>
+
+<script type="text/javascript" src="app://bower_components/svg.js/dist/svg.js"></script>
+<script type="text/javascript" src="animate-timeline.js"></script>
