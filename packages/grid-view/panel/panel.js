@@ -8,28 +8,53 @@ Editor.registerPanel( 'grid-view.panel', {
     },
 
     ready: function () {
-        this.$.pixiGrid.setScaleH( [5,2,3,2], 1, 1000, 'frame' );
-        // this.$.pixiGrid.setScaleH( [5,2], 0.01, 1000 );
-        this.$.pixiGrid.setMappingH( -100, 100, 200 );
+        // curveEditor
+        this.$.curveEditor.setScaleH( [5,2,3,2], 1, 1000, 'frame' );
+        // this.$.curveEditor.setScaleH( [5,2], 0.01, 1000 );
+        this.$.curveEditor.setMappingH( 0, 100, 100 );
 
-        this.$.pixiGrid.setScaleV( [5,2], 0.01, 1000 );
-        this.$.pixiGrid.setMappingV( 100, -100, 200 );
+        this.$.curveEditor.setScaleV( [5,2], 0.01, 1000 );
+        this.$.curveEditor.setMappingV( 100, -100, 200 );
 
-        this.$.pixiGrid.setAnchor( 0.0, 0.0 );
+        this.$.curveEditor.setAnchor( 0.0, 0.5 );
+
+        // timeline
+        this.$.timeline.setScaleH( [5,2,3,2], 1, 1000, 'frame' );
+        this.$.timeline.setMappingH( 0, 100, 100 );
+
+        this.$.timeline.setAnchor( 0.0, 0.0 );
     },
 
     _onResize: function ( event ) {
-        this.$.pixiGrid.resize();
-        this.$.pixiGrid.repaint();
+        this.$.curveEditor.resize();
+        this.$.curveEditor.repaint();
+
+        this.$.timeline.resize();
+        this.$.timeline.repaint();
     },
 
     _onPanelShow: function ( event ) {
-        this.$.pixiGrid.resize();
-        this.$.pixiGrid.repaint();
+        this.$.curveEditor.resize();
+        this.$.curveEditor.repaint();
+
+        this.$.timeline.resize();
+        this.$.timeline.repaint();
     },
 
     _onMouseWheel: function ( event ) {
-        this.$.pixiGrid.scaleAction(event);
+        if (  Polymer.dom(event).localTarget === this.$.timeline ) {
+            var newScale = Editor.Utils.smoothScale(this.$.timeline.xAxisScale, event.wheelDelta);
+            this.$.timeline.xAxisScaleAt ( event.offsetX, newScale );
+            this.$.timeline.repaint();
+
+            newScale = Editor.Utils.smoothScale(this.$.curveEditor.xAxisScale, event.wheelDelta);
+            this.$.curveEditor.xAxisScaleAt ( event.offsetX, newScale );
+            this.$.curveEditor.repaint();
+        }
+        else {
+            this.$.curveEditor.scaleAction(event);
+            this.$.timeline.scaleAction(event);
+        }
     },
 
     _onMouseDown: function ( event ) {
@@ -45,8 +70,11 @@ Editor.registerPanel( 'grid-view.panel', {
                 this._lastClientX = event.clientX;
                 this._lastClientY = event.clientY;
 
-                this.$.pixiGrid.pan( dx, dy );
-                this.$.pixiGrid.repaint();
+                this.$.curveEditor.pan( dx, dy );
+                this.$.curveEditor.repaint();
+
+                this.$.timeline.pan( dx, 0 );
+                this.$.timeline.repaint();
             }.bind(this);
 
             var mouseupHandle = function(event) {

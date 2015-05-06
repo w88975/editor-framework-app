@@ -11,38 +11,11 @@
         background: #333;
         box-sizing: border-box;
     }
-    .debug-info {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        padding: 5px 15px;
-
-        border: 1px solid #999;
-        background: rgba( 0, 0, 0, 0.2 );
+    #timeline {
+        height: 20px;
+        border-bottom: 2px solid black;
     }
-    #hlabels {
-        color: #999;
-        font-size: 12px;
-        position: absolute;
-        bottom: 5px;
-        left: 0px;
-    }
-    #hlabels .label {
-        position: absolute;
-        transform: translateX(-50%);
-    }
-    #vlabels {
-        color: #999;
-        font-size: 12px;
-        position: absolute;
-        top: 0px;
-        left: 5px;
-    }
-    #vlabels .label {
-        position: absolute;
-        transform: translateY(-50%);
-    }
-    #pixiGrid {
+    #curveEditor {
         cursor: -webkit-grab;
     }
   </style>
@@ -50,13 +23,20 @@
   <template>
     <div class="border fit">
         <div class="layout horizontal fit">
-            <div style="min-width: 240px"></div>
-            <pixi-grid id="pixiGrid" class="flex-1"
-                show-label
-                show-debug-info
-                on-mousedown="_onMouseDown"
-                on-mousewheel="_onMouseWheel"
-            ></pixi-grid>
+            <div style="min-width: 240px; background: #555;"></div>
+            <div class="layout vertical flex-1">
+                <pixi-grid id="timeline"
+                    show-label-h
+                    on-mousedown="_onMouseDown"
+                    on-mousewheel="_onMouseWheel"
+                ></pixi-grid>
+                <pixi-grid id="curveEditor" class="flex-1"
+                    show-label-v
+                    show-debug-info
+                    on-mousedown="_onMouseDown"
+                    on-mousewheel="_onMouseWheel"
+                ></pixi-grid>
+            </div>
       </div>
     </div>
   </template>
