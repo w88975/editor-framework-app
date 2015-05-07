@@ -1,38 +1,42 @@
 {
-  "name": "editor-framework-app",
+  "name": "editor-framework",
   "version": "0.0.1",
-  "description": "A simple app based on editor-framework.",
+  "description": "A simple framework for making panel based applications.",
   "homepage": "http://fireball-x.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fireball-x/editor-framework-app.git"
+    "url": "https://github.com/fireball-x/editor-framework.git"
   },
   "author": "Firebox Technology",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fireball-x/editor-framework-app/issues"
+    "url": "https://github.com/fireball-x/editor-framework/issues"
   },
   "dependencies": {
     "fire-fs": "0.1.8",
     "fire-url": "0.1.6",
     "fire-path": "0.1.6",
-    "browserify": "9.0.8",
+    "browserify": "10.1.1",
     "commander": "2.7.1",
     "chalk": "1.0.0",
     "winston": "1.0.0",
     "globby": "2.0.0",
     "async": "0.9.0",
-    "semver": "4.3.3"
+    "semver": "4.3.3",
+    "chokidar": "1.0.1"
   },
   "devDependencies": {
     "gulp": "",
-    "gulp-shell": "0.2.11",
-    "gulp-download-fire-shell": "",
     "gulp-changed": "1.2.1",
     "gulp-sequence": "0.3.2",
     "gulp-watch": "4.2.4",
     "del": "1.1.1",
-    "chalk": "1.0.0"
+    "gulp-stylus": "2.0.1",
+    "gulp-jshint": "1.10.0",
+    "jshint-stylish": "1.0.2",
+    "gulp-vulcanize": "5.0.0",
+    "gulp-shell": "0.2.11",
+    "gulp-download-fire-shell": ""
   },
   "fire-shell-version": "0.24.0",
   "electron-version": "0.25.2",
