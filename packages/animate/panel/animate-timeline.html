@@ -5,35 +5,50 @@
 
 <template>
     <div class="content layout horizontal" id="content">
-        <div class="action_tree">
+        <div class="action_tree" id="actionTree">
+            <div class="toolbar" id="toolbar">
+                Actions
+                <div class="add" on-click="_addItem">
+                    +
+                </div>
+            </div>
+            <div class="action" id="action" fit>
+                <ul class="items" on-scroll="_scroll" id="actionItem"></ul>
+            </div>
         </div>
+        <span class="space"></span>
         <div class="layout vertical flex-1" id="layout">
+            <div class="cube" id="mousecube" on-mousedown="_drag">
+                <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="width:10px;height:20.5px;">
+                    <polygon points="0,0 10,0 4.5,8"
+                        style="fill:white;"/>
+                    <line x1="4.5" y1="0" x2="4.5" y2="100%" style="fill:white;stroke:white;"/>
+                </svg>
+            </div>
             <div class="timeline-bar">
-                <pixi-grid id="pixiGrid" class="fit black"
+                <pixi-grid id="timeLine" class="fit" style="border-bottom: 1px solid black;"
                 show-label-h
                 on-mousedown="_onMouseDown"
                 on-mousewheel="_onMouseWheel"
                 ></pixi-grid>
+
             </div>
-            <div class="drop-sheet flex-1" id="timeline">
+            <div class="drop-sheet flex-1">
                 <pixi-grid id="dropSheep" class="fit"
                 show-label-v
                 >
                 </pixi-grid>
 
-                <div class="line" id="lines"
-                on-mousewheel="_onMouseWheel"
-                >
-                    <ul id="ul"></ul>
+                <div id="drag"></div>
+
+                <div class="line" id="lineBg"></div>
+                <div id="lines" on-mousewheel="_onMouseWheel"
+                on-click="_click" class="actionNodes" style="opacity: 1;background: none;">
+
                 </div>
             </div>
-
 
             <div id="mask"></div>
-            <div id="drag" on-mousedown="_drag">
-                <div class="cube">
-                </div>
-            </div>
         </div>
     </div>
 

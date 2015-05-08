@@ -4,22 +4,27 @@ Editor.registerPanel( 'animate-timeline.panel', {
     properties: {
         frames: {
             type: Number,
-            value: 0,
+            value: 200,
+            observer: '_framesChanged',
+        },
+        actions: {
+            type: Object,
+            value: []
         }
     },
 
     listeners: {
         'resize': '_onResize',
-        'frames': '_framesChanged',
     },
 
     ready: function () {
 
+        this.xscrollTop = 0;
         this.lineSvg = SVG(this.$.lines);
 
-        this.$.pixiGrid.setScaleH( [5,2,3,2], 1, 1000, 'frame' );
-        this.$.pixiGrid.setMappingH( 0, 100, 100 );
-        this.$.pixiGrid.setAnchor(0.0,0.0);
+        this.$.timeLine.setScaleH( [5,2,3,2], 1, 1000, 'frame' );
+        this.$.timeLine.setMappingH( 0, 100, 100 );
+        this.$.timeLine.setAnchor(0.0,0.0);
 
         this.$.dropSheep.setScaleH( [5,2,3,2], 1, 1000, 'frame' );
         this.$.dropSheep.setMappingH( 0, 100, 100 );
@@ -34,23 +39,39 @@ Editor.registerPanel( 'animate-timeline.panel', {
     _onResize: function ( event ) {
         this.tickWidth = this.$.layout.getBoundingClientRect().width;
 
-        this.$.pixiGrid.resize();
+        this.$.actionItem.style.height = this.$.actionTree.getBoundingClientRect().height - this.$.toolbar.getBoundingClientRect().height;
+
+        this.$.timeLine.resize();
+
         this.$.dropSheep.resize();
 
         this.repaint();
     },
 
+    _framesChanged: function () {
+        if ( this.$.dropSheep.valueToPixelH) {
+            this.integerFrame(this.valueToPixelH(this.frames));
+        }
+    },
+
     _onMouseWheel: function ( event ) {
         event.stopPropagation();
 
-        var newScale = Editor.Utils.smoothScale(this.$.pixiGrid.xAxisScale, event.wheelDelta);
-        this.$.pixiGrid.xAxisScaleAt ( event.offsetX, newScale );
+        var newScale = Editor.Utils.smoothScale(this.$.timeLine.xAxisScale, event.wheelDelta);
+
+        if (newScale <= 1) {
+            newScale = 1;
+        }
+
+        this.$.timeLine.xAxisScaleAt ( event.offsetX, newScale );
         this.$.dropSheep.xAxisScaleAt ( event.offsetX, newScale );
 
         this.repaint();
     },
 
     _onMouseDown: function ( event ) {
+        event.stopPropagation();
+
         if ( event.which === 1 ) {
             event.stopPropagation();
 
@@ -63,7 +84,15 @@ Editor.registerPanel( 'animate-timeline.panel', {
                 this._lastClientX = event.clientX;
                 this._lastClientY = event.clientY;
 
-                this.$.pixiGrid.pan( dx, 0 );
+                if (this.$.dropSheep.xAxisOffset + dx >= 0) {
+
+                    this.$.dropSheep.xAxisOffset = 0;
+                    this.$.timeLine.xAxisOffset = 0;
+                    this.repaint();
+
+                    return;
+                }
+                this.$.timeLine.pan( dx, 0 );
                 this.$.dropSheep.pan( dx, 0 );
                 this.repaint();
             }.bind(this);
@@ -92,101 +121,54 @@ Editor.registerPanel( 'animate-timeline.panel', {
 
     repaint: function () {
         window.requestAnimationFrame( function( event ) {
-            this.$.pixiGrid.repaint();
+            this.$.timeLine.repaint();
             this.$.dropSheep.repaint();
-            if (this.$.dropSheep.valueToPixelH(this.frames) < 0) {
+
+            if (this.valueToPixelH(this.frames) < 0) {
                 this.$.drag.style.display = 'none';
+                this.$.mousecube.style.display = 'none';
                 this.$.mask.style.display = 'none';
             }
             else {
                 this.$.drag.style.display = 'block';
+                this.$.mousecube.style.display = 'block';
                 this.$.mask.style.display = 'block';
             }
-            this.$.drag.style.left = this.$.dropSheep.valueToPixelH(this.frames);
+
+            this.$.drag.style.left = this.valueToPixelH(this.frames);
+            this.$.mousecube.style.left = this.valueToPixelH(this.frames);
             this.$.mask.style.width = this.drawMask();
-            this.drawLines();
+            this.repaintActions();
         }.bind(this));
-    },
-
-    drawTick: function () {
-        this.tick.clear();
-        this.linePool = [];
-        this.textPool = [];
-        var count = (this.$.timeline.getBoundingClientRect().width) / 50;
-        var line = null;
-        var text = null;
-        for (var i = 0; i < count + 5; i ++) {
-            if ((i) % 5 === 0 || i === 0) {
-                line = this.tick.line( i * this.interval ,13, i * this.interval ,28)
-                .stroke({
-                    width: 1,
-                    color: "#7D7D7D"
-                });
-
-                if (i === 0) {
-                    text = this.tick.text( (0.00).toString() )
-                    .move( i * this.interval + 2, 23)
-                    .font({
-                        size: 8,
-                        fill: "#969696",
-                    });
-                }
-                else {
-                    text = this.tick.text( (this.unit * ((i) / 5)).toString() )
-                    .move( i * this.interval + 2, 23)
-                    .font({
-                        size: 8,
-                        fill: "#969696",
-                    });
-                }
-            }
-            else {
-                if ( i % 2 !== 0) {
-                    line = this.tick.line( i * this.interval, 13, i * this.interval, 22)
-                    .stroke({
-                        width: 1,
-                        color: "#7D7D7D"
-                    });
-                }else {
-                    line = this.tick.line( i * this.interval, 13, i * this.interval, 17)
-                    .stroke({
-                        width: 1,
-                        color: "#7D7D7D"
-                    });
-                }
-            }
-            this.linePool.push(line);
-            this.textPool.push(text);
-        }
-    },
-
-    _framesChanged: function () {
-        this.$.drag.style.left = this.$.dropSheep.valueToPixelH(this.frames);
-        this.drawMask();
     },
 
     drawMask: function () {
         this.$.mask.style.width = this.$.drag.getBoundingClientRect().left - this.$.layout.getBoundingClientRect().left;
     },
 
-    // TODO: 务必使用canvas绘制
-    drawLines: function () {
-        this.$.ul.innerHTML = '';
-        var width = this.$.lines.getBoundingClientRect().width;
-        var height = this.$.lines.getBoundingClientRect().height;
-        for (var i = 0; i < (height/30) + 2; i++) {
-            var li = document.createElement('li');
-            li.className = 'item';
-            li.style.width = "100%";
-            li.style.height = "30px";
-            if ( i%2 === 0 ) {
-                li.style.background = 'black';
-            }
-            else {
-                li.style.background = 'gray';
-            }
-            this.$.ul.appendChild(li);
-        }
+    valueToPixelH: function (value) {
+        return this.$.dropSheep.valueToPixelH(value);
+    },
+
+    pixelToValueH: function (value) {
+        return this.$.dropSheep.pixelToValueH(value);
+    },
+
+    integerFrame: function (offsetX) {
+        var nextFrames = this.pixelToValueH(offsetX);
+        var integerPixel = this.valueToPixelH(Math.round(nextFrames));
+        this.$.drag.style.left = integerPixel;
+        this.$.mousecube.style.left = integerPixel;
+        this.frames = Math.round(nextFrames);
+        this.drawMask();
+        return this.frames;
+    },
+
+    _click: function (event) {
+        event.stopPropagation();
+
+        this.integerFrame(event.offsetX);
+        // this.repaint();
     },
 
     _drag: function (event) {
@@ -194,20 +176,20 @@ Editor.registerPanel( 'animate-timeline.panel', {
 
         var time = setInterval(function () {
             if (this.forward) {
-                this.$.pixiGrid.pan( -3, 0 );
-                this.$.dropSheep.pan( -3, 0 );
-                this.frames = this.$.dropSheep.pixelToValueH(this.tickWidth - 20);
+                this.$.timeLine.pan( -this.step, 0 );
+                this.$.dropSheep.pan( -this.step, 0 );
+                this.frames += 3;
                 tipElement.innerHTML = this.frames;
                 this.repaint();
             }
             if (this.rollBack) {
-                this.$.pixiGrid.pan( + 3, 0 );
+                this.$.timeLine.pan( + 3, 0 );
                 this.$.dropSheep.pan( + 3, 0 );
-                this.frames = this.$.dropSheep.pixelToValueH(1);
+                this.frames = this.pixelToValueH(1);
                 tipElement.innerHTML = this.frames;
                 this.repaint();
             }
-        }.bind(this),2);
+        }.bind(this), 2 * this.$.dropSheep.xAxisScale);
 
         var left = this.$.drag.getBoundingClientRect().left - this.$.layout.getBoundingClientRect().left;
         var parentLeft = this.$.layout.getBoundingClientRect().left;
@@ -220,6 +202,7 @@ Editor.registerPanel( 'animate-timeline.panel', {
             var dx = event.clientX - this._lastClientX;
             if ( (left + dx) <= 0) {
                 this.$.drag.style.left = 0;
+                this.$.mousecube.style.left = 0;
                 this.frames = 0;
 
                 this.drawMask();
@@ -229,19 +212,18 @@ Editor.registerPanel( 'animate-timeline.panel', {
                 return;
             }
             if ((left + dx) >= (this.tickWidth - 50)) {
-                this.$.drag.style.left = this.tickWidth - 50;
-                this.frames = this.$.dropSheep.pixelToValueH(this.tickWidth - 20);
-                this.drawMask();
+
+                this.integerFrame(this.tickWidth - 50);
                 tipElement.innerHTML = this.frames;
+                this.step = (this.valueToPixelH(1) - this.valueToPixelH(0)) * 3;
                 this.forward = true;
                 this.rollBack = false;
                 return;
             }
             this.forward = false;
             this.rollBack = false;
-            this.$.drag.style.left = left + dx;
-            this.frames = this.$.dropSheep.pixelToValueH(left + dx);
-            this.drawMask();
+
+            this.integerFrame(left + dx);
 
             tipElement.style.display = 'block';
             tipElement.style.left = event.x + 20;
@@ -266,4 +248,152 @@ Editor.registerPanel( 'animate-timeline.panel', {
         document.addEventListener ( 'mousemove', mousemoveHandle );
         document.addEventListener ( 'mouseup', mouseupHandle );
     },
+
+    _scroll: function (event) {
+        event.stopPropagation();
+
+        this.xscrollTop = this.$.actionItem.scrollTop;
+        this.repositionBackground(this.xscrollTop);
+
+        this.repaintActions(this.xscrollTop);
+    },
+
+    repositionBackground: function (top) {
+        this.$.action.style.backgroundPosition = '0 ' + -top + 'px';
+        this.$.lineBg.style.backgroundPosition = '0 ' + -top + 'px';
+    },
+
+    'timeline:add-item': function (detail) {
+        var lineIndex = this.actions.length;
+
+        var name = detail;
+
+        this.createActionNode(lineIndex,name,null);
+
+        this.xscrollTop = this.$.actionItem.scrollHeight - this.$.actionItem.getBoundingClientRect().height;
+        this.$.actionItem.scrollTop = this.xscrollTop;
+        this.repositionBackground(this.xscrollTop);
+    },
+
+    _addItem: function (event) {
+        var rect  = event.target.getBoundingClientRect();
+
+        Editor.Menu.popup( rect.left + 5, rect.bottom + 5, [
+            { label: 'type1', message: 'timeline:add-item', params: ['type1'] },
+            { label: 'type2', message: 'timeline:add-item', params: ['type2'] },
+            { label: 'type3', message: 'timeline:add-item', params: ['type3'] },
+            { label: 'type4', message: 'timeline:add-item', params: ['type4'] },
+        ]);
+    },
+
+    createActionNode: function (lineIndex,name,type) {
+
+        //检查当前frame是否有节点
+        // for (var item in this.actions) {
+        //     if (this.actions[item].frame === this.frames && this.actions[item].lineIndex === lineIndex ) {
+        //         return;
+        //     }
+        // }
+
+        var offsetX = this.valueToPixelH(this.frames);
+        var action = this.lineSvg.polygon('0,5 5,0 10,5 5,10').move(offsetX - 5, lineIndex * 30 + 10 - this.xscrollTop).fill('#2D94E9');
+        action.style('cursor','-webkit-grabbing');
+        action.frame = this.frames;
+        action.mousedown(function(event) {
+            event.stopPropagation();
+
+            action.fill('white');
+            this.frames = action.frame;
+            this.moveAction(action);
+        }.bind(this));
+
+        if (this.actions[lineIndex]) {
+            this.actions[lineIndex].child.push({
+                node: action,
+                lineIndex: lineIndex,
+            });
+        }
+        else {
+            var lineGroup = {
+                name: name,
+                type: type,
+                child: []
+            };
+
+            lineGroup.child.push({
+                node: action,
+                lineIndex: lineIndex,
+            });
+
+            this.actions.push(lineGroup);
+        }
+
+        this.repaintActions();
+        this.updateLineDom();
+    },
+
+    removeLine: function (lineIndex) {
+
+        for (var item in this.actions[lineIndex].child) {
+            this.actions[lineIndex].child[item].node.remove();
+        }
+
+        this.actions.splice(lineIndex,1);
+        this.repaintActions();
+        this.updateLineDom();
+    },
+
+    moveAction: function (actionNode) {
+        EditorUI.addDragGhost("-webkit-grabbing");
+        var originX = actionNode.cx();
+        var originY = actionNode.cy();
+        var mousemoveHandle = function (event) {
+
+            var dx = event.clientX - this._lastClientX;
+            var frame = this.integerFrame(originX + dx);
+            actionNode.move(this.valueToPixelH(frame) - 5, originY - 5);
+            actionNode.frame = frame;
+
+        }.bind(this);
+
+        var mouseupHandle = function (event) {
+            document.removeEventListener('mousemove', mousemoveHandle);
+            document.removeEventListener('mouseup', mouseupHandle);
+            actionNode.fill('#2D94E9');
+            EditorUI.removeDragGhost();
+        }.bind(this);
+
+        this._lastClientX = event.clientX;
+
+        document.addEventListener ( 'mousemove', mousemoveHandle );
+        document.addEventListener ( 'mouseup', mouseupHandle );
+    },
+
+    repaintActions: function () {
+        for (var i = 0; i < this.actions.length; i++) {
+            for (var item in this.actions[i].child) {
+                this.actions[i].child[item].node.move(
+                    this.valueToPixelH(this.actions[i].child[item].node.frame) - 5,
+                    i * 30 + 10 - this.xscrollTop
+                );
+            }
+        }
+    },
+
+    updateLineDom: function () {
+        this.$.actionItem.innerHTML = '';
+        for (var i = 0; i < this.actions.length; i++) {
+            var item = document.createElement('li');
+
+            item.style.height = '30px';
+            item.style.lineHeight = '30px';
+            item.innerHTML = this.actions[i].name;
+            item.setAttribute('lineIndex',i);
+            item.addEventListener('dblclick',function (event) {
+                this.createActionNode(event.target.getAttribute('lineIndex'));
+            }.bind(this));
+            this.$.actionItem.appendChild(item);
+        }
+    },
+
 });

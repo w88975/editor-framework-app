@@ -19,6 +19,7 @@
       "min-width": 400,
       "min-height": 100,
       "messages": [
+          "timeline:add-item"
       ]
     }
   }

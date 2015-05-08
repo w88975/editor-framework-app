@@ -1,11 +1,11 @@
 :host {
     overflow: hidden;
     box-shadow: inset 0 0 8px 2px rgba(0,0,0,0.2);
-    background: #333;
     position: relative;
 }
 
 .content {
+
 }
 
 .topbar {
@@ -18,7 +18,15 @@
 
 .action_tree {
     min-width: 240px;
-    background: #555;
+    background: #474747;
+    height: 100%;
+}
+
+.space {
+    width: 4px;
+    height: 100%;
+    background: #333;
+    box-shadow: inset 0 0 8px 2px rgba(0,0,0,0.2);
 }
 
 .timeline-bar {
@@ -32,7 +40,6 @@
     overflow: hidden;
     overflow-x: hidden;
     background: rgb(65,65,65);
-    box-shadow: inset 0 0 8px 2px rgba(0,0,0,0.2);
     height: 100%;
     position: relative;
 }
@@ -74,21 +81,21 @@
 
 #drag {
     height: 100%;
-    width: 1.2px;
-    background: red;
+    width: 1px;
+    background: white;
     position: absolute;
     bottom: 0px;
+    pointer-events: none;
     left: 0px;
-    cursor: col-resize;
 }
 
-#drag .cube {
-    width: 8px;
-    height: 12px;
-    background: #E29D09;
-    /*border: 1px solid black;*/
-    border-radius: 2px;
+.cube {
+    width: 10px;
+    height: 20px;
+    position: absolute;
     margin-left: -4px;
+    cursor: col-resize;
+    z-index: 999;
 }
 
 .tip {
@@ -104,15 +111,6 @@
     z-index: 999;
 }
 
-.mouse_select {
-    position: absolute;
-    background: #0099ff;
-    opacity: 0.4;
-    border: 1px solid rgb(98,177,254);
-    left: 0px;
-    top: 0px;
-}
-
 #layout {
     position: relative;
 }
@@ -122,25 +120,53 @@
     height: 100%;
     position: absolute;
     top: 0px;
-    opacity: 0.1;
+    background: url('img/bg.png');
+    opacity: 0.7;
 }
 
-.line ul {
+.actionNodes {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0px;
+}
+
+.items {
     margin: 0;
+    width: 100%;
     padding: 0;
     list-style: none;
-}
-
-.item{
-    width: 100%;
-    height: 30px;
-    background: black;
-}
-
-.item:nth-child(even) {
-    background: gray;
+    overflow-y: scroll;
 }
 
 .black {
     background: black;
+}
+
+.toolbar {
+    width: 100%;
+    height: 20px;
+    background: rgb(74, 74, 74);
+    float: left;
+    font-size: 12px;
+    padding-left: 5px;
+    box-shadow: inset 0 0 8px 2px rgba(0,0,0,0.2);
+    line-height: 20px;
+    color: #B2B2B2;
+    text-align: left;
+}
+
+.action {
+    float: left;
+    width: 100%;
+    background: url('img/bg.png');
+}
+
+.add {
+    width: 15px;
+    height: 15px;
+    float: right;
+    font-size: 18px;
+    line-height: 15px;
+    margin-right: 5px;
 }
