@@ -19,7 +19,10 @@
       "min-width": 400,
       "min-height": 100,
       "messages": [
-          "timeline:add-item"
+          "timeline:add-type",
+          "timeline:delete-type",
+          "timeline:add-child",
+          "timeline:delete-node"
       ]
     }
   }

@@ -13,7 +13,15 @@
                 </div>
             </div>
             <div class="action" id="action" fit>
-                <ul class="items" on-scroll="_scroll" id="actionItem"></ul>
+                <ul class="items" on-scroll="_scroll" id="actionItem">
+                    <template is="x-repeat" items="{{actions}}">
+                        <li class="item" on-mousedown="_rightContextMenu">
+                            <span class="name" id="item_name">{{item.type}}</span>
+                            <span class="line_add" id="item_button" on-click="_createBrother">×</span>
+                        </li>
+                    </template>
+                </ul>
+                <input type="text" value="{{nowValue::input}}" style="position:absolute;top:10px;">
             </div>
         </div>
         <span class="space"></span>
